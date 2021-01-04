@@ -1,0 +1,18 @@
+{
+  "name": "learner",
+  "version": "0.1.0",
+  "description": "a synthesizer that teaches subtractive synthesis basics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "xor",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "tone": "^14.7.58"
+  },
+  "devDependencies": {
+    "webpack": "^5.11.1",
+    "webpack-cli": "^4.3.1"
+  }
+}
