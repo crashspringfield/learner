@@ -30,7 +30,12 @@ const keyMapping = [
 ]
 
 // Wrapper to handle octaves && pass to key or click events
-const playNote = (note) => {
+const playNote = key => {
+  const id = key.id
+  let note = key.note
+
+  document.getElementById(id).classList.add('playing')
+
   if (note.match(/oct/)) {
     note = note.replace(/oct/, OCTAVE + 1)
   } else {
@@ -45,9 +50,7 @@ document.addEventListener('keydown', e => {
   if (keyMapping.map(k => k.id).includes(e.key)) {
     const key = keyMapping.filter(k => k.id === e.key)[0]
 
-    document.getElementById(e.key).classList.add('playing')
-
-    playNote(key.note)
+    playNote(key)
   }
 })
 
@@ -59,4 +62,25 @@ document.addEventListener('keyup', e => {
 
     synth.triggerRelease()
   }
+})
+
+// Play notes for click events
+keyMapping.forEach(key => {
+  document.getElementById(key.id).addEventListener('mousedown', () => {
+    playNote(key)
+  })
+  document.getElementById(key.id).addEventListener('touchstart', () => {
+    playNote(key)
+  })
+
+  document.getElementById(key.id).addEventListener('mouseup', () => {
+    document.getElementById(key.id).classList.remove('playing')
+
+    synth.triggerRelease()
+  })
+  document.getElementById(key.id).addEventListener('touchend', () => {
+    document.getElementById(key.id).classList.remove('playing')
+
+    synth.triggerRelease()
+  })
 })
