@@ -68,12 +68,12 @@
 .arrows .key{text-align: center; padding-left: 7px; margin-left:2px;}
 .hidden{visibility: hidden;}
 
-.key:hover{
-  box-shadow:0px 0px 10px #14B524;
+.natural:hover, .sharp-or-flat:hover{
+  box-shadow:0px 0px 10px #d27f1e;
   z-index:1000;
 }
 
 .playing {
-  box-shadow:0px 0px 10px #14B524;
+  box-shadow:0px 0px 10px #d27f1e;
   z-index:1000;
 }

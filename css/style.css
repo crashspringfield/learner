@@ -29,6 +29,12 @@ a:hover {
   color: #fff;
 }
 
+.center-children {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .center-h {
   margin: 0 auto;
 }
@@ -53,7 +59,7 @@ a:hover {
 
 .digital-outline {
   border: 1px solid #d27f1e;
-  /* border-radius: 10px; */
+  border-radius: 10px;
 }
 
 /* Customize the label (the container) */
@@ -157,12 +163,28 @@ a:hover {
   cursor: pointer;
 }
 
+.input-slider:hover, .input-knob:hover {
+  cursor: pointer;
+}
+
 .mb-10 {
   margin-bottom: 10px;
 }
 
 .mb-30 {
   margin-bottom: 30px;
+}
+
+.mh-10 {
+  margin: 0 10px;
+}
+
+.mh-12 {
+  margin: 0 12px;
+}
+
+.pa-10 {
+  padding: 10px;
 }
 
 .pa-20 {
@@ -175,4 +197,9 @@ a:hover {
 
 .td-underline {
   text-decoration: underline;
+}
+
+.tootip {
+  padding: 2px 6px;
+  font-size: 0.6rem;
 }
