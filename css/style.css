@@ -53,8 +53,61 @@ a:hover {
 
 .digital-outline {
   border: 1px solid #d27f1e;
-  border-radius: 10px;
+  /* border-radius: 10px; */
 }
+
+/* Customize the label (the container) */
+.digital-radio {
+  display: block;
+  position: relative;
+  padding-left: 30px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.digital-radio input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom radio button */
+.digital-radio-light {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: red;
+  border-radius: 10px;
+  margin-top: 5px;
+  box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75) inset;
+  -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75) inset;
+  -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75) inset;
+}
+
+/* On mouse-over, add a grey background color */
+.digital-radio:hover input ~ .digital-radio-light {
+  background-color: #d27f1e;
+  box-shadow: 0px 0px 10px 5px rgba(210,127,30,0.75);
+  -webkit-box-shadow: 0px 0px 10px 5px rgba(210,127,30,0.75);
+  -moz-box-shadow: 0px 0px 10px 5px rgba(210,127,30,0.75);
+}
+
+/* When the radio button is checked, add a blue background */
+.digital-radio input:checked ~ .digital-radio-light {
+  background-color: #d27f1e;
+  box-shadow: 0px 0px 10px 5px rgba(210,127,30,0.75);
+  -webkit-box-shadow: 0px 0px 10px 5px rgba(210,127,30,0.75);
+  -moz-box-shadow: 0px 0px 10px 5px rgba(210,127,30,0.75);
+}
+
 
 /* Customize the label (the container) */
 .digital-switch {
@@ -94,10 +147,10 @@ a:hover {
 
 /* When the checkbox is checked */
 .digital-switch input:checked ~ .digital-switch-light {
- background-color: #d27f1e;
- box-shadow: 0px 0px 10px 5px rgba(210,127,30,0.75);
- -webkit-box-shadow: 0px 0px 10px 5px rgba(210,127,30,0.75);
- -moz-box-shadow: 0px 0px 10px 5px rgba(210,127,30,0.75);
+  background-color: #d27f1e;
+  box-shadow: 0px 0px 10px 5px rgba(210,127,30,0.75);
+  -webkit-box-shadow: 0px 0px 10px 5px rgba(210,127,30,0.75);
+  -moz-box-shadow: 0px 0px 10px 5px rgba(210,127,30,0.75);
 }
 
 .hover {
@@ -110,6 +163,10 @@ a:hover {
 
 .mb-30 {
   margin-bottom: 30px;
+}
+
+.pa-20 {
+  padding: 20px;
 }
 
 .orange {

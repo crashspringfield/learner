@@ -1,8 +1,10 @@
 import { MonoSynth } from 'tone'
 
+const oscType = document.getElementById('osc-type')
+
 const synth = new MonoSynth({
 	oscillator: {
-		type: "square"
+		type: "sine"
 	},
 	envelope: {
 		attack: 0.1
@@ -45,7 +47,7 @@ const playNote = key => {
   synth.triggerAttack(note)
 }
 
-
+// Play note when key pressed.
 document.addEventListener('keydown', e => {
   if (keyMapping.map(k => k.id).includes(e.key)) {
     const key = keyMapping.filter(k => k.id === e.key)[0]
@@ -54,6 +56,7 @@ document.addEventListener('keydown', e => {
   }
 })
 
+// Stop note when key lifted.
 document.addEventListener('keyup', e => {
   if (keyMapping.map(k => k.id).includes(e.key)) {
     const key = keyMapping.filter(k => k.id === e.key)[0]
@@ -83,4 +86,13 @@ keyMapping.forEach(key => {
 
     synth.triggerRelease()
   })
+})
+
+// Change oscillator type.
+oscType.addEventListener('change', e => {
+	synth.set({
+		oscillator: {
+			type: e.target.title
+		},
+	})
 })
