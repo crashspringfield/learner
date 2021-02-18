@@ -9,7 +9,7 @@
 .keyboard {
   width: 650px;
   height: 220px;
-  background-color: #bbb;
+  background-color: #9b9b9b;
   margin: 0px auto;
   border-radius: 9px;
   padding: 30px;
@@ -43,7 +43,7 @@
 
 .null {
   cursor: disabled;
-  background-color: #bbbbbb;
+  background-color: #9b9b9b;
   color: grey;
 }
 
