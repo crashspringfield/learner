@@ -4,6 +4,7 @@
   "description": "a synthesizer that teaches subtractive synthesis basics",
   "main": "index.js",
   "scripts": {
+    "bundle": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "xor",

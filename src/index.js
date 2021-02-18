@@ -1,84 +1,45 @@
-// import { MonoSynth } from 'tone'
 import { AutoFilter, AmplitudeEnvelope, Destination, Filter, OmniOscillator } from 'tone'
 import * as tooltips from './tooltips.js'
-import * as synth    from './synth.js'
-
 
 // DOM elements
-// const ampEnv        = document.getElementById('amp-env')
 const ampAttack     = document.getElementById('amp-attack')
 const ampDecay      = document.getElementById('amp-decay')
 const ampSustain    = document.getElementById('amp-sustain')
 const ampRelease    = document.getElementById('amp-release')
-// const filter        = document.getElementById('filter')
-const filterAttack  = document.getElementById('filter-attack')
-const filterDecay   = document.getElementById('filter-decay')
-const filterSustain = document.getElementById('filter-sustain')
-const filterRelease = document.getElementById('filter-release')
 const filterCutoff  = document.getElementById('filter-cutoff')
-const filterEnv     = document.getElementById('filter-env')
+const lfoRate       = document.getElementById('lfo-rate')
 const oscType       = document.getElementById('osc-type')
 
-// const synth = new MonoSynth({
-// 	oscillator: {
-// 		type: "sine"
-// 	},
-// 	filter: {
-// 		type: 'lowpass',
-// 		frequency: 'C8'
-// 	},
-// 	envelope: {
-// 		attack: 0,
-// 		decay: 2,
-// 		sustain: 1,
-// 		release: 0
-// 	},
-// 	filterEnvelope: {
-// 		attack: 0,
-// 		decay: 2,
-// 		sustain: 1,
-// 		release: 0
-// 	}
-// }).toDestination()
+// Initialize Oscillator
+let octave     = 4
+let oscillator = new OmniOscillator({ type: 'sine' })
 
-const oscillator = new OmniOscillator({
-	type: 'sine'
-})
-
-const FILTER_TYPE = 'lowpass'
+// Initialize the Filter
 const FILTER_FREQUENCY = 20000
-const FILTER_ROLLOFF = -24
-const LFO_FREQUENCY = 1
-let filter = new Filter(
-	FILTER_FREQUENCY, FILTER_TYPE, FILTER_ROLLOFF
-).toDestination()
+const LFO_FREQUENCY    = 1
+const ROLLOFF          = -48
+
 let autoFilter = new AutoFilter(
 	LFO_FREQUENCY,
 	FILTER_FREQUENCY
-)
-autoFilter.filter.rolloff = FILTER_ROLLOFF
-// filter.start()
+).toDestination()
 
-// attack 0-2
-// decay 0-2
-// sustain 0-1
-// release 0-5
-const ampEnv = new AmplitudeEnvelope({
+autoFilter.set({
+	filter: {
+		rolloff: ROLLOFF
+	}
+})
+
+// Tone Envelope ranges: attack 0-2, decay 0-2, sustain 0-1, release 0-5
+let ampEnv = new AmplitudeEnvelope({
 	attack: 0,
 	decay: 2,
 	sustain: 1,
 	release: 0
 }).toDestination()
 
-// oscillator.chain(filter, ampEnv).start()
-// oscillator.connect(ampEnv).start() // works
-// oscillator.connect(autoFilter).start() // works
+// oscillator.chain(ampEnv, autoFilter, Destination).start()
 oscillator.chain(ampEnv, autoFilter).start()
-
-console.log('osc', oscillator.get())
-
-// TODO: set-able
-const OCTAVE = 4
 
 // Map key pressing/clicking to events.
 const keyMapping = [
@@ -99,22 +60,25 @@ const keyMapping = [
 
 // Wrapper to handle octaves && pass to key or click events
 const playNote = key => {
-  const id = key.id
-  let note = key.note.match(/oct/)
-	         ? key.note.replace(/oct/, OCTAVE + 1)
-					 : `${key.note}${OCTAVE}`
+  const id   = key.id
+  const note = key.note.match(/oct/)
+	           ? key.note.replace(/oct/, octave + 1)
+					   : `${key.note}${octave}`
 
   document.getElementById(id).classList.add('playing')
 
 	oscillator.set({ frequency: note })
 
-	// ampEnv.triggerAttack() // works
-	// ampEnv.connect(autoFilter).triggerAttack()
-	// oscillator.chain(filter, ampEnv.triggerAttack()) // sort of works
-
 	autoFilter.toDestination().start()
 	ampEnv.triggerAttack()
+}
 
+// Wrapper to pass to key or click events
+const stopNote = key => {
+	document.getElementById(key.id).classList.remove('playing')
+
+	autoFilter.toDestination().stop()
+	ampEnv.triggerRelease()
 }
 
 // Play note when key pressed.
@@ -129,15 +93,9 @@ document.addEventListener('keydown', e => {
 // Stop note when key lifted.
 document.addEventListener('keyup', e => {
   if (keyMapping.map(k => k.id).includes(e.key)) {
-    const key = keyMapping.filter(k => k.id === e.key)[0]
+		const key = keyMapping.filter(k => k.id === e.key)[0]
 
-    document.getElementById(e.key).classList.remove('playing')
-
-		ampEnv.triggerRelease()
-
-		// oscillator.disconnect(autoFilter)
-		// ampEnv.triggerRelease() // works
-		// ampEnv.triggerRelease().disconnect(autoFilter)
+		stopNote(key)
   }
 })
 
@@ -146,104 +104,91 @@ keyMapping.forEach(key => {
   document.getElementById(key.id).addEventListener('mousedown', () => {
     playNote(key)
   })
+
   document.getElementById(key.id).addEventListener('touchstart', () => {
     playNote(key)
   })
 
   document.getElementById(key.id).addEventListener('mouseup', () => {
-    document.getElementById(key.id).classList.remove('playing')
-
-    ampEnv.triggerRelease()
+    stopNote(key)
   })
+
   document.getElementById(key.id).addEventListener('touchend', () => {
-    document.getElementById(key.id).classList.remove('playing')
-
-    ampEnv.triggerRelease()
-		oscillator.disconnect(filter)
+    stopNote(key)
   })
 })
 
-// Change oscillator type.
-oscType.addEventListener('change', e => {
-	oscillator.set({
-		type: e.target.title
-	})
-oscillator.chain(ampEnv, autoFilter).start()
 
+/**
+ * Oscillator
+ */
+
+// Change oscillator waveform.
+oscType.addEventListener('change', e => {
+	const type = e.target.title
+
+	oscillator.set({ type })
 })
 
-// Filter Cutoff
+// TODO: Change Oscillator frequency.
+
+
+/**
+ * Filter Cutoff
+ */
 filterCutoff.addEventListener('change', e => {
 	const percentToHz = 20000 * (e.target.value / 100)
 	const frequency   = percentToHz > 100 ? percentToHz : 100 // Filter screws up at low values
-	// console.log('f', frequency)
-	// autoFilter.set({
-	// 	baseFrequency: f
-	// })
-	// console.log('filter', autoFilter.baseFrequency)
-// oscillator.disconnect(filter)
-	// filter.frequency.rampTo(frequency, 0)
-	// // oscillator.connect(filter)
-	// console.log('filter.frequency', filter.frequency)
-	// console.log('filter.frequency.value', filter.frequency.value)
 
-	console.log('before', autoFilter.get())
+	console.log('cutoff frequency:', frequency)
 
-	autoFilter.baseFrequency = frequency // works
-
-	// oscillator.connect(filter)
-	console.log('after', autoFilter.get())
-
+	autoFilter.baseFrequency = frequency
 })
 
-// Filter envelope
-// filterAttack.addEventListener('change', e => {
-// 	synth.set({
-// 		filterEnvelope: {
-// 			attack: 2 * (e.target.value / 100)
-// 		}
-// 	})
-// })
-// filterDecay.addEventListener('change', e => {
-// 	synth.set({
-// 		filterEnvelope: {
-// 			decay: 2 * (e.target.value / 100)
-// 		}
-// 	})
-// })
-// filterSustain.addEventListener('change', e => {
-// 	synth.set({
-// 		filterEnvelope: {
-// 			sustain: e.target.value / 100
-// 		}
-// 	})
-// })
-// filterRelease.addEventListener('change', e => {
-// 	synth.set({
-// 		filterEnvelope: {
-// 			release: 5 * (e.target.value / 100)
-// 		}
-// 	})
-// })
 
-// Amp envelope
+/**
+ * LFO
+ */
+lfoRate.addEventListener('change', e => {
+	const frequency = e.target.value / 10
+
+	console.log('lfo rate: ', frequency)
+
+	autoFilter.set({ frequency })
+})
+
+
+/**
+ * Amp envelope
+ */
 ampAttack.addEventListener('change', e => {
-	ampEnv.set({
-		attack: 2 * (e.target.value / 100)
-	})
+	const attack = 2 * (e.target.value / 100)
+
+	console.log('setting attack:', attack)
+
+	ampEnv.set({ attack })
 })
+
 ampDecay.addEventListener('change', e => {
-	ampEnv.set({
-		decay: 2 * (e.target.value / 100)
-	})
+	const decay =  2 * (e.target.value / 100)
+
+	console.log('setting decay:', decay)
+
+	ampEnv.set({ decay })
 })
+
 ampSustain.addEventListener('change', e => {
-	ampEnv.set({
-		sustain: e.target.value / 100
-	})
+	const sustain = e.target.value / 100
+
+	console.log('setting sustain:', sustain)
+
+	ampEnv.set({ sustain })
 })
+
 ampRelease.addEventListener('change', e => {
-	ampEnv.set({
-		release: 5 * (e.target.value / 100)
-	})
+	const release = 5 * (e.target.value / 100)
+
+	console.log('setting release:', release)
+
+	ampEnv.set({ release })
 })

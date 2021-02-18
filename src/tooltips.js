@@ -19,7 +19,7 @@ const OSC_INSTRUCTIONS = `
 		ratio between them) generate different timbres.
 	</p>
 	<p>
-		<b class="orange">SINE</b> A sinewave is just the fundamental pitch. For example,
+		<b class="orange">SINE</b> A sine wave is just the fundamental pitch. For example,
 		concert A is vibrating at 440Hz (that's 440 times a second).
 	</p>
 	<p>
@@ -27,7 +27,7 @@ const OSC_INSTRUCTIONS = `
 		but also odd harmonic overtones.
 	</p>
 	<p>
-		<b class="orange">SAWTOOTH</b> A sawtooch wave has the fundamental pitch and
+		<b class="orange">SAWTOOTH</b> A sawtooth wave has the fundamental pitch and
 		both the even and odd harmonic overtones.
 	</p>
 `
@@ -38,7 +38,7 @@ const LPF_INSTRUCTIONS = `
 		letting lower ones pass through.
 	</p>
 	<p>
-		Turning the knob counter-clockwise closes the filters, cutting off the rich
+		Turning the knob counter-clockwise closes the filter, cutting off the rich
 		overtones  that give <b class="orange">SQUARE</b> and <b class="orange">SAWTOOTH</b>
 		waves their rich sound.
 	</p>
@@ -98,6 +98,11 @@ const AMP_ENV_INSTRUCTIONS = `
 		<span class="orange">RELEASE</span>
 		How long the note rings out once the key is released.
 	</p>
+	<br>
+	<br>
+	<p>
+		** BUG ** If the attack is too slow, and you release a key before the note plays, shit gets messy.
+	</p>
 `
 const KEYBOARD_INSTRUCTIONS = `
 	<p>
@@ -110,7 +115,15 @@ type
 `
 
 const LFO_INSTRUCTIONS = `
-LFO
+	<p>
+		The human ear can't hear vibrations slower than about 20 times a second--the pitch is too low.
+	</p>
+	<p>
+	 Low Frequency Oscillators oscillate below the range of human hearing. Instead, we use them to modulate--or change--something else.
+	</p>
+	<p>
+		This LFO is patched to the filter to affect the cutoff frequency. Try closing the filter and then adjusting the LFO.
+	</p>
 `
 
 const RESONANCE_INSTRUCTIONS = `
@@ -122,11 +135,11 @@ res hits
  *   {Object} DOM id and html for synth instructions
  */
 const instructionsMapping = [
-  { id: 'filter-control', html: '' },
-  { id: 'resonance-control', html: RESONANCE_INSTRUCTIONS },
-  { id: 'type',           html: FILTER_TYPE_INSTRUCTIONS },
+  { id: 'filter-control', html: LPF_INSTRUCTIONS },
+  // { id: 'resonance-control', html: RESONANCE_INSTRUCTIONS },
+  // { id: 'type',           html: FILTER_TYPE_INSTRUCTIONS },
 	{ id: 'amp-env',        html: AMP_ENV_INSTRUCTIONS },
-	{ id: 'filter-env',     html: FILTER_ENV_INSTRUCTIONS },
+	// { id: 'filter-env',     html: FILTER_ENV_INSTRUCTIONS },
 	{ id: 'keyboard',       html: KEYBOARD_INSTRUCTIONS },
 	{ id: 'osc-type',       html: OSC_INSTRUCTIONS },
   { id: 'lfo',            html: LFO_INSTRUCTIONS }
@@ -140,14 +153,7 @@ const createTooltip = rule => {
 	const el = document.getElementById(rule.id)
 
 	el.addEventListener('mouseenter', () => {
-    // TODO: I hate this
-    if (rule.id == 'filter-control') {
-      instructions.innerHTML = document.getElementById('lp').checked
-                             ? LPF_INSTRUCTIONS
-                             : HPF_INSTRUCTIONS
-    } else {
-      instructions.innerHTML = instructionsMapping.find(k => k.id == el.id).html
-    }
+    instructions.innerHTML = instructionsMapping.find(k => k.id == el.id).html
 	})
 
 	el.addEventListener('mouseleave', () => {
@@ -155,13 +161,7 @@ const createTooltip = rule => {
 	})
 
 	el.addEventListener('touchstart', () => {
-    if (rule.id == 'filter-control') {
-      instructions.innerHTML = document.getElementById('lp').checked
-                             ? LPF_INSTRUCTIONS
-                             : HPF_INSTRUCTIONS
-    } else {
-      instructions.innerHTML = instructionsMapping.find(k => k.id == el.id).html
-    }
+    instructions.innerHTML = instructionsMapping.find(k => k.id == el.id).html
 	})
 }
 
