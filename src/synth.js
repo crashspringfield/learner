@@ -1,7 +1,5 @@
 // import { MonoSynth } from 'tone'
 import { AutoFilter, AmplitudeEnvelope, Destination, Filter, OmniOscillator } from 'tone'
-import * as tooltips from './tooltips.js'
-import * as synth    from './synth.js'
 
 
 // DOM elements
@@ -19,28 +17,7 @@ const filterCutoff  = document.getElementById('filter-cutoff')
 const filterEnv     = document.getElementById('filter-env')
 const oscType       = document.getElementById('osc-type')
 
-// const synth = new MonoSynth({
-// 	oscillator: {
-// 		type: "sine"
-// 	},
-// 	filter: {
-// 		type: 'lowpass',
-// 		frequency: 'C8'
-// 	},
-// 	envelope: {
-// 		attack: 0,
-// 		decay: 2,
-// 		sustain: 1,
-// 		release: 0
-// 	},
-// 	filterEnvelope: {
-// 		attack: 0,
-// 		decay: 2,
-// 		sustain: 1,
-// 		release: 0
-// 	}
-// }).toDestination()
-
+// Initialize Oscillator
 const oscillator = new OmniOscillator({
 	type: 'sine'
 })
