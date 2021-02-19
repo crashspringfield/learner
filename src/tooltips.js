@@ -7,6 +7,9 @@ const DEFAULT_INSTRUCTIONS = `
 		Simply follow the numbers and look here for instructions as you hover over each block.
 		If on a phone, tap the number to see the instructions.
 	</p>
+	<p>
+		If you'd like to add features or update instructions, check out the <a href="https://github.com/crashspringfield/learner" class="td-underline" target="_blank">souce code</a>.
+	</p>
 `
 
 const OSC_INSTRUCTIONS = `
